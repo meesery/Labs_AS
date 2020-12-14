@@ -1,0 +1,172 @@
+//БИНАРНЫЕ ДЕРЕВЬЯ
+
+struct Tree  {                    
+	int data;
+	Tree *left, *right;
+};
+
+//прямой обход бинарного дерева
+void PreOrder_Tree(Tree* tree) {
+	if (tree != NULL) {
+		cout << tree->data << '\t';
+		PreOrder_Tree(tree->left);
+		PreOrder_Tree(tree->right);
+	}
+}
+
+//обратный обход бинарного дерева
+void PostOrder_Tree(Tree* tree) {
+	if (tree != NULL) {
+		PostOrder_Tree(tree->left);
+		PostOrder_Tree(tree->right);
+		cout << tree->data << '\t';
+	}
+}
+
+//симметричный обход бинарного дерева
+void SymmetricOrder_Tree(Tree* tree) {
+	if (tree != NULL) {
+		SymmetricOrder_Tree(tree->left);
+		cout << tree->data << '\t';
+		SymmetricOrder_Tree(tree->right);
+	}
+}
+
+//очистка памяти
+void del(Tree *&tree) {
+	if (tree != NULL){
+		del(tree->left); 
+		del(tree->right);
+		delete tree; 
+		tree = NULL;
+	}
+}
+
+//Фукция добавления звена в дерево
+void add_node(int data, Tree *&tree){ 
+	if (tree == NULL) {
+		tree = new Tree;
+		tree->data = data;
+		tree->left = NULL;
+		tree->right = NULL;
+		return;
+	}
+	if (data < tree->data) {
+		add_node(data, tree->left);
+	}
+	else if (data > tree->data) {
+		add_node(data, tree->right);
+	}
+}
+
+//распечатка дерева
+void Print_BinaryTree(Tree* Node) {
+	if (Node != NULL) {
+		Print_BinaryTree(Node->right);
+		cout << Node->data<<" ";
+		Print_BinaryTree(Node->left);
+	}
+	else cout << endl;
+}
+
+//поиск минимального
+bstree *Тree_min (Тree *tree) {
+	if (tree == NULL)
+		return NULL;
+	while (tree->left != NULL)
+		tree = tree->left;
+	return tree;
+}
+
+//поиск максимального
+bstree *Тree_max (Тree *tree) {
+	if (tree == NULL)
+		return NULL;
+	while (tree->right != NULL)
+		tree = tree->right;
+	return tree;
+}
+
+//поиск
+Tree* search(Tree* tree, int data) { 
+	if (tree != NULL) {
+		if (tree->data == data) {
+			return tree;
+		}
+		else if (data < tree->data) {
+			if (tree->left != NULL) { //левое поддерево
+				return search(tree->left, data);
+			}
+			else return NULL;
+		}
+		else if (tree->right != NULL) {	//правое поддерево
+			return search(tree->right, data);
+		}
+		else return NULL;
+	}
+}
+
+//высота дерева
+int HeightOfTree(Tree * tree) {
+	if (tree == 0)
+		return 0;
+	int left = -1, right = -1;
+
+	if (tree->left != NULL) {
+		left = HeightOfTree(tree->left);
+	}
+	
+	if (tree->right != NULL) {
+		right = HeightOfTree(tree->right);
+	}
+	
+	int max = left > right ? left : right;
+	
+	return max + 1;
+}
+
+//число узлов
+int NodeCount(Tree * tree){
+	if (tree->left == NULL && tree->right == NULL) {
+		return 1;
+	}
+	
+	int left = 0, right = 0;
+	
+	if (tree->left != NULL) {
+		left = NodeCount(tree->left);
+	}
+
+	if (tree->right != NULL) {
+		right = NodeCount(tree->right);
+	}
+	return left + right + 1;
+}
+
+//количество узлов где только один потомок
+int potomki_(Tree *tree){
+	int num = 0;
+	if (!tree) return 0;
+	if ((tree->left == NULL) ^ (tree->right == NULL))
+		num = 1;
+	return num + potomki(tree->left) + potomki(tree->right);
+}
+
+//количество листов
+int list(Tree *tree) {
+	int nem = 0;
+	if (!tree) return 0;
+	if ((tree->left == NULL) && (tree->right == NULL))
+		num = 1;
+	return num + list(tree->left) + list(tree->right);
+}
+
+//глубина дерева
+int getMaxDepth(Tree* tree, int depth = 0) {
+	if (tree == NULL)
+		return depth;
+	if (getMaxDepth(tree->left, depth + 1) > getMaxDepth(tree->right, depth + 1))
+		return getMaxDepth(tree->left, depth + 1);
+	else
+		return getMaxDepth(tree->right, depth + 1);
+}

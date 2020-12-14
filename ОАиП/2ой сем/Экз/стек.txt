@@ -1,0 +1,75 @@
+//СТЕК
+
+struct list {
+	int data;
+	list *next;
+};
+
+void create_list(list *&head) {
+	head = NULL;
+	cout << "Введите количество элементов стека:\n";
+	int N;
+	cin >> N;
+	cout << "Введите стек, состоящий из " << N << " элементов\n";
+	for (int i = 0; i < N; i++) {
+		create_node(head);
+	}
+	if (N > 0) {
+		output(head);
+		cin.ignore();
+	}
+}
+
+void create_node(list *&head) {  //добавление записи
+	list *new_node = new list;
+	cin >> new_node->data;
+
+	if (head == NULL) {
+		head = new_node;
+		head->next = NULL;
+	}
+	else {
+		new_node->next = head;
+		head = new_node;		
+	}
+}
+
+void deleting_element(list *&head) {
+	if (empty(head) == false) {
+		list *current = head; //указатель на текущий элемент
+		head = head->next;
+		delete current;
+		current = head;
+	}
+}
+
+void output(list *head) {  //вывод на консоль
+	if (empty(head) == false) {
+		cout << "Список:\n";
+		int i = 0;
+		while (head) {
+			cout << head->data << " ";
+			head = head->next;
+			i++;
+		}
+	}
+}
+
+bool empty(list*head) {
+	if (head == NULL) {
+		cout << "Список пуст.\n";
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void delete_list(list *head) {
+	if (empty(head) == false) {
+		if (head) {
+			delete_list(head->next);
+			delete head;
+		}
+	}
+}

@@ -1,0 +1,98 @@
+#include <iostream> 
+using namespace std;
+
+struct Tree {
+	int Value;
+	Tree* left, *right;
+};
+
+struct Queue {
+	Tree tree;
+	Queue* Next;
+};
+
+void Add_to_queue(Queue *&q, Tree val) { //добавление в очередь
+	Queue *new_node = new Queue;
+	new_node->tree = val;
+	new_node->Next = nullptr;
+
+	if (!q) {
+		q = new_node;
+	}
+	else {
+		Queue* Temp = q;
+		while (Temp->Next != nullptr)
+			Temp = Temp->Next;
+		Temp->Next = new_node;
+	}
+}
+
+int Pop(Queue*& q) { //извлечение из очереди
+	if (q) {
+		Tree current = q->tree;
+		Queue* temp = q;
+		q = q->Next;
+		delete temp;
+		return current.Value;
+	}
+}
+
+void PrintTree(Tree* Head, int Size) { //распечатка дерева
+	if (Head)
+	{
+		PrintTree(Head->right, Size + 1);
+		for (int i = 0; i < Size; i++) cout << " ";
+		cout << "V:" << Head->Value << endl;
+		PrintTree(Head->left, Size + 1);
+	}
+}
+
+void AddToTree(Tree*& Root, int val) { //добавление в дерево
+	if (!Root) {
+		Root = new Tree;
+		Root->Value = val;
+		Root->left = nullptr;
+		Root->right = nullptr;
+		return;
+	}
+	
+	if (val < Root->Value) {
+		AddToTree(Root->left, val);
+	}
+	if (val > Root->Value) {
+		AddToTree(Root->right, val);
+	}
+}
+
+void BFS(Queue *Q) { //обход в ширину
+	while (Q) {
+		if (Q->tree.left)
+			Add_to_queue(Q, *Q->tree.left);
+		if (Q->tree.right)
+			Add_to_queue(Q, *Q->tree.right);
+		cout << Pop(Q) << ' ';
+	}
+}
+
+int main() {
+	Tree* Root = nullptr;
+	AddToTree(Root, 5);
+	AddToTree(Root, 6);
+	AddToTree(Root, 7);
+	AddToTree(Root, 4);
+	AddToTree(Root, 8);
+	AddToTree(Root, 2);
+
+	Queue* Q = nullptr;
+
+	Add_to_queue(Q, *Root);
+
+	cout << "\n BFS" << endl;
+	BFS(Q);
+
+	cout << endl;
+	PrintTree(Root, 0);
+
+	system("pause");
+	return 0;
+}

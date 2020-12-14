@@ -1,0 +1,154 @@
+//ОДНОНАПРАВЛЕННЫЙ СПИСОК
+
+struct list {
+	int data;
+	list *next;
+};
+
+void create_list(list *&head) {
+	head = NULL;
+	cout << "Введите количество элементов списка:\n";
+	int N;
+	cin >> N;
+	cout << "Введите список, состоящий из " << N << " элементов\n";
+	for (int i = 0; i < N; i++) {
+		create_node(head);
+	}
+	if (N > 0) {
+		output(head);
+		cin.ignore();
+	}
+}
+
+void create_node(list *&head) {  //добавление записи
+	list *new_node = new list;
+	cin >> new_node->data;
+	new_node->next = NULL;
+
+	if (head == NULL) {
+		head = new_node;
+	}
+	else {
+		list *q = head;
+		while (q->next) {
+			q = q->next;
+		}
+		q->next = new_node;
+	}
+}
+
+void add_to_the_head(list *head) {
+	list *new_node = new list;
+	cout << "Введите что-нибудь\n";
+	cin >> new_node->data;
+	new_node->next = head;
+	head = new_node;
+}
+
+void add_before(list *head) {
+	list *current = head;
+	cout << "Введите перед чем вставлять\n";
+	int element;
+	cin >> element;
+	while (current->next) {
+		if (element == current->next->data) {
+			list*new_node = new list;
+			cout << "Введите что-нибудь\n";
+			cin >> new_node->data;
+			new_node->next = current->next;
+			current->next = new_node;
+			current = current->next;
+		}
+		current = current->next;
+	}
+}
+
+void add_after(list *head) {
+	list *current = head;
+	cout << "Введите после чего вставлять\n";
+	int element;
+	cin >> element;
+	while (current) {
+		if (current->data == element) {
+			list*new_node = new list;
+			cout << "Введите что-нибудь\n";
+			cin >> new_node->data;
+			new_node->next = current->next;
+			current->next = new_node;
+		}
+		current = current->next;
+	}
+}
+
+void deleting_element(list *&head) {
+	if (empty(head) == false) {
+		output(head);
+		int element;
+		cout << "\nВведите элемент списка, который хотите удалить.\n";
+		cin >> element;
+		list *current = head; //указатель на текущий элемент
+		bool find = false;
+		while (current) {
+			if (element == current->data) {
+				find = true;
+				if (current != NULL) {//проверка на корректность
+					if (current == head) {//удаляем первый элемент
+						head = head->next;
+						delete current;
+						current = head;
+					}
+					else {//удаляем непервый элемент
+						list *q;//вспомогательный указатель
+						q = head;
+						while (q->next != current) {
+							q = q->next;
+						}
+						q->next = current->next;
+						delete current;
+						current = q;
+					}
+				}
+			}
+			else current = current->next;
+		}
+
+		if (find == false) {
+			cout << "Данный элемент не найден.\n";
+		}
+		else {
+			output(head);
+			cin.ignore();
+		}
+	}
+}
+
+void output(list *head) {  //вывод на консоль
+	if (empty(head) == false) {
+		cout << "Список:\n";
+		int i = 0;
+		while (head) {
+			cout << head->data << " ";
+			head = head->next;
+			i++;
+		}
+	}
+}
+
+bool empty(list*head) {
+	if (head == NULL) {
+		cout << "Список пуст.\n";
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void delete_list(list *head) {
+	if (empty(head) == false) {
+		if (head) {
+			delete_list(head->next);
+			delete head;
+		}
+	}
+}
